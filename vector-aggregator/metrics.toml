@@ -1,0 +1,9 @@
+[sources.in_metrics]
+type = "vector"
+address = "0.0.0.0:6001"
+version = "2"
+
+[sinks.out_metrics]
+type = "prometheus_remote_write"
+inputs = ["in_metrics"]
+endpoint = "http://promscale:9201/write"

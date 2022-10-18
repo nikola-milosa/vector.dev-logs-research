@@ -1,0 +1,49 @@
+[sources.logs]
+type = "http"
+address = "0.0.0.0:8000"
+encoding = "text"
+path = "/"
+method = "POST"
+
+# When everything is running, uncomment this block and add to the transforms.parse > inputs another item "logs3" and save the file, the vector
+# will reload
+
+# [sources.logs3]
+# type = "docker_logs"
+# include_containers = [ "rustlogger-3" ]
+# docker_host = "http://host.docker.internal:2375"
+
+[transforms.to_json_array]
+type = "remap"
+inputs = [ "logs" ]
+source = """
+. = parse_json!(.message)
+"""
+
+[transforms.to_json]
+type = "remap"
+inputs = [ "to_json_array" ]
+source = """
+. = parse_json!(.message)
+"""
+
+# [sinks.out]
+# type = "console"
+# inputs = ["to_json"]
+# target = "stdout"
+#     [sinks.out.encoding]
+#     codec = "text"
+
+[sinks.out_logs]
+type = "loki"
+inputs = ["to_json"]
+endpoint = "http://loki:3100"
+compression = "none"
+    [sinks.out_logs.labels]
+    ic_node = "{{ node_ip }}"
+    ic_subnet = "{{ subnet }}"
+    dc = "{{ dc }}"
+    ipv4 = "{{ node_ip }}"
+    severity = "INFO"
+    [sinks.out_logs.encoding]
+    codec = "json"

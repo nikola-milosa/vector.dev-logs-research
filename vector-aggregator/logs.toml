@@ -1,0 +1,16 @@
+[sources.in_logs]
+type = "vector"
+address = "0.0.0.0:6000"
+version = "2"
+
+[sinks.out_logs]
+type = "loki"
+inputs = ["in_logs"]
+endpoint = "http://loki:3100"
+compression = "none"
+    [sinks.out_logs.labels]
+    forwarder = "vector-aggregator"
+    app = "{{ app }}"
+    severity = "{{ severity }}"
+    [sinks.out_logs.encoding]
+    codec = "json"

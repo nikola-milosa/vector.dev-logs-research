@@ -1,0 +1,17 @@
+[
+    {
+        "node_ips" : ["log-generator-1", "log-generator-1"],
+        "dc" : "dc1",
+        "subnet" : "subnet1"
+    },
+    {
+        "node_ips" : ["log-generator-3"],
+        "dc" : "dc2",
+        "subnet" : "subnet2"
+    },
+    {
+        "node_ips" : ["log-generator-2"],
+        "dc" : "dc5",
+        "subnet" : "subnet2-nowcreated"
+    }
+]

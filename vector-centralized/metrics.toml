@@ -1,0 +1,16 @@
+[sources.metrics]
+type = "host_metrics"
+collectors = [ "cpu" ]
+scrape_interval_secs = 10
+
+# [sinks.out_metrics]
+# inputs = ["metrics"]
+# type = "vector"
+# address = "vector-aggregator:6001"
+# version = "2"
+
+[sinks.out_metrics]
+type = "prometheus_remote_write"
+inputs = ["metrics"]
+endpoint = "http://promscale:9201/write"
+    
