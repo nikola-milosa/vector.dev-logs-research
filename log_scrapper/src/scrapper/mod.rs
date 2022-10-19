@@ -19,7 +19,17 @@ pub async fn start_scrape(
         {
             for ic_node in ic_nodes.lock().unwrap().iter() {
                 let url = format_url(cursors.get(&ic_node.ip), &ic_node.ip, &global_config);
-                let resp = reqwest::get(url).await?.text().await?;
+                let response = match reqwest::get(url).await {
+                    Ok(response) => response,
+                    Err(e) => {
+                        error!(
+                            "Error while getting response from node {}: {}",
+                            ic_node.ip, e
+                        );
+                        continue;
+                    }
+                };
+                let resp = response.text().await?;
 
                 handle_response(&resp, &mut cursors, &ic_node, &mut current_scrape)
             }
@@ -48,12 +58,21 @@ async fn post_to_vector(
         .header("CONTENT_TYPE", "application/json")
         .json(&current_scrape)
         .send()
-        .await?;
-    if response.status() != 200 {
-        error!("Error sending to vector: {:?}", response.text().await?);
+        .await;
+    let response = match response {
+        Ok(response) => response,
+        Err(e) => {
+            error!("Error while posting to vector: {}", e);
+            return Err(Box::new(e));
+        }
+    };
+    match response.error_for_status() {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            error!("Error while posting to vector: {}", e);
+            Err(Box::new(e))
+        }
     }
-
-    Ok(())
 }
 
 fn handle_response(
