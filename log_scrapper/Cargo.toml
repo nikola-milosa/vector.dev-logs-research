@@ -1,5 +1,5 @@
 [package]
-name = "log_scraper"
+name = "log_scrapper"
 version = "0.1.0"
 edition = "2021"
 
@@ -12,3 +12,4 @@ serde_json = "1.0"
 serde = { version = "1.0.145", features = ["derive"]}
 env_logger = "0.9.1"
 log = "0.4.17"
+notify = "4.0.12"

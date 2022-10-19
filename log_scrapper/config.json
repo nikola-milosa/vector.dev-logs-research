@@ -1,0 +1,20 @@
+[
+    {
+        "ic_node" : "sq6zd",
+        "dc" : "dc1",
+        "ic_subnet" : "subnet1",
+        "ip" : "log-generator-1"
+    },
+    {
+        "ic_node" : "foajf",
+        "dc" : "dc2",
+        "ic_subnet" : "subnet2",
+        "ip" : "log-generator-2"
+    },
+    {
+        "ic_node" : "fjopi",
+        "dc" : "dc1",
+        "ic_subnet" : "subnet3",
+        "ip" : "log-generator-3"
+    }
+]

@@ -4,4 +4,4 @@ COPY ./ ./
 
 RUN cargo build --release
 
-CMD ["/target/release/file_watcher"]
+CMD ["/target/release/log_scrapper"]

@@ -16,7 +16,7 @@ services:
     restart: always
     container_name: log-generator-1
     environment:
-      - RUST_LOG=trace
+      - RUST_LOG=info
       - PORT=5000
       - HOST=0.0.0.0
     ports:
@@ -29,7 +29,7 @@ services:
     restart: always
     container_name: log-generator-2
     environment:
-      - RUST_LOG=trace
+      - RUST_LOG=info
       - PORT=5000
       - HOST=0.0.0.0
     ports:
@@ -42,44 +42,26 @@ services:
     restart: always
     container_name: log-generator-3
     environment:
-      - RUST_LOG=trace
+      - RUST_LOG=info
       - PORT=5000
       - HOST=0.0.0.0
     ports:
       - "5002:5000"
 
-  log-scraper-1:
+  log-scrapper-1:
     build: 
-      context: ./log_scraper
+      context: ./log_scrapper
       dockerfile: ./dockerfile
     container_name: log-scrapper
     restart: always
     environment:
-      - RUST_LOG=trace
-      - API_PORT=5000
+      - RUST_LOG=info
+      - JOURNAL_PORT=5000
       - SCRAPE_INTERVAL=10
       - VECTOR_INSTANCE_IP=http://vector-centralized:8000
-      - CONFIG_PATH=/etc/scraper/config.json
+      - CONFIG_PATH=/etc/scrapper/config.json
     volumes:
-      - ./log_scraper/config.json:/etc/scraper/config.json
-
-  # rustlogger-2:
-  #   build:
-  #     context: ./logger
-  #     dockerfile: ./dockerfile
-  #   restart: always
-  #   container_name: rustlogger-2
-  #   environment:
-  #     - RUST_LOG=trace
-
-  # rustlogger-3:
-  #   build:
-  #     context: ./logger
-  #     dockerfile: ./dockerfile
-  #   restart: always
-  #   container_name: rustlogger-3
-  #   environment:
-  #     - RUST_LOG=trace
+      - ./log_scrapper/config.json:/etc/scrapper/config.json
 
   grafana:
     image: grafana/grafana-oss
