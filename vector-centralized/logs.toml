@@ -1,23 +1,15 @@
 [sources.logs]
-type = "http"
-address = "0.0.0.0:8000"
-encoding = "text"
-path = "/"
-method = "POST"
+type = "file"
+include = [ "/logs/**/*.log" ]
+read_from = "beginning"
 
-[transforms.to_json_array]
+[transforms.to_json]
 type = "remap"
 inputs = [ "logs" ]
 source = """
 . = parse_json!(.message)
 """
 
-[transforms.to_json]
-type = "remap"
-inputs = [ "to_json_array" ]
-source = """
-. = parse_json!(.message)
-"""
 # Debug purposes
 # [sinks.out]
 # type = "console"
@@ -32,9 +24,7 @@ inputs = ["to_json"]
 endpoint = "http://loki:3100"
 compression = "none"
     [sinks.out_logs.labels]
-    ic_node = "{{ ic_node }}"
-    ic_subnet = "{{ ic_subnet }}"
-    dc = "{{ dc }}"
-    ip = "{{ ip }}"
+    ic_node = "{{ node_id }}"
+    ic_subnet = "{{ subnet_id }}"
     [sinks.out_logs.encoding]
     codec = "json"

@@ -6,62 +6,9 @@ services:
     command: ["--config", "/etc/vector/*.toml", "--watch-config"]
     volumes:
       - ./vector-centralized/:/etc/vector/
+      - ~/tmp:/logs
     container_name: vector-centralized
     restart: always
-
-  log-generator-1:
-    build:
-      context: ./logger
-      dockerfile: ./dockerfile
-    restart: always
-    container_name: log-generator-1
-    environment:
-      - RUST_LOG=info
-      - PORT=5000
-      - HOST=0.0.0.0
-    ports:
-      - "5000:5000"
-  
-  log-generator-2:
-    build:
-      context: ./logger
-      dockerfile: ./dockerfile
-    restart: always
-    container_name: log-generator-2
-    environment:
-      - RUST_LOG=info
-      - PORT=5000
-      - HOST=0.0.0.0
-    ports:
-      - "5001:5000"
-
-  log-generator-3:
-    build:
-      context: ./logger
-      dockerfile: ./dockerfile
-    restart: always
-    container_name: log-generator-3
-    environment:
-      - RUST_LOG=info
-      - PORT=5000
-      - HOST=0.0.0.0
-    ports:
-      - "5002:5000"
-
-  log-scrapper-1:
-    build: 
-      context: ./log_scrapper
-      dockerfile: ./dockerfile
-    container_name: log-scrapper
-    restart: always
-    environment:
-      - RUST_LOG=info
-      - JOURNAL_PORT=5000
-      - SCRAPE_INTERVAL=10
-      - VECTOR_INSTANCE_IP=http://vector-centralized:8000
-      - CONFIG_PATH=/etc/scrapper/config.json
-    volumes:
-      - ./log_scrapper/config.json:/etc/scrapper/config.json
 
   grafana:
     image: grafana/grafana-oss
