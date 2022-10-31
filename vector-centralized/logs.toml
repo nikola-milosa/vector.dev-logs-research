@@ -26,5 +26,7 @@ compression = "none"
     [sinks.out_logs.labels]
     ic_node = "{{ node_id }}"
     ic_subnet = "{{ subnet_id }}"
+    dc = "{{ dc_id }}"
+    ic_operator = "{{ operator_id }}"
     [sinks.out_logs.encoding]
     codec = "json"
