@@ -1,7 +1,7 @@
 [sources.logs]
-type = "file"
-include = [ "/logs/**/*.log" ]
-read_from = "beginning"
+type = "socket"
+mode = "unix"
+path = "/logs/vector"
 
 [transforms.to_json]
 type = "remap"
@@ -22,12 +22,12 @@ if is_string(parsed_message){
 """
 
 # Debug purposes
-# [sinks.out]
-# type = "console"
-# inputs = ["to_json"]
-# target = "stdout"
-#     [sinks.out.encoding]
-#     codec = "text"
+[sinks.out]
+type = "console"
+inputs = ["to_json"]
+target = "stdout"
+    [sinks.out.encoding]
+    codec = "text"
 
 [sinks.out_logs]
 type = "loki"
