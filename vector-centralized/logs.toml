@@ -8,6 +8,17 @@ type = "remap"
 inputs = [ "logs" ]
 source = """
 . = parse_json!(.message)
+parsed_message = parse_json(.MESSAGE) ?? .MESSAGE
+if is_string(parsed_message){
+    .MESSAGE = parsed_message
+    .LEVEL = "INFO"
+} else {
+    .MESSAGE = parsed_message.log_entry.message
+    .LEVEL = parsed_message.log_entry.level
+    .CRATE_ = parsed_message.log_entry.crate_
+    .MODULE = parsed_message.log_entry.module
+    .LINE = parsed_message.log_entry.line
+}
 """
 
 # Debug purposes
