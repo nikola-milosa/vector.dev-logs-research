@@ -3,9 +3,14 @@ type = "socket"
 mode = "unix"
 path = "/logs/vector"
 
+[transforms.filter]
+type = "filter"
+inputs = [ "logs" ]
+condition = { type = "vrl", source = "starts_with(to_string(.message) ?? \"\", \"{\")" }
+
 [transforms.to_json]
 type = "remap"
-inputs = [ "logs" ]
+inputs = [ "filter" ]
 source = """
 . = parse_json!(.message)
 parsed_message = parse_json(.MESSAGE) ?? .MESSAGE
@@ -22,12 +27,12 @@ if is_string(parsed_message){
 """
 
 # Debug purposes
-[sinks.out]
-type = "console"
-inputs = ["to_json"]
-target = "stdout"
-    [sinks.out.encoding]
-    codec = "text"
+# [sinks.out]
+# type = "console"
+# inputs = ["to_json"]
+# target = "stdout"
+#     [sinks.out.encoding]
+#     codec = "text"
 
 [sinks.out_logs]
 type = "loki"
