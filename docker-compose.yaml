@@ -1,14 +1,16 @@
 version: '3.9'
 
 services:
-  vector-centralized:
-    image: timberio/vector:0.24.0-alpine
-    command: ["--config", "/etc/vector/*.toml", "--watch-config"]
-    volumes:
-      - ./vector-centralized/:/etc/vector/
-      - ~/tmp:/logs
-    container_name: vector-centralized
-    restart: always
+  # vector-centralized:
+  #   image: timberio/vector:0.25.0-alpine
+  #   command: ["--config-dir", "/etc/vector/"]
+  #   volumes:
+  #     - ./vector-centralized/:/etc/vector/
+  #     - ~/tmp:/logs
+  #   container_name: vector-centralized
+  #   restart: always
+  #   environment:
+  #     - VECTOR_WATCH_CONFIG=true
 
   grafana:
     image: grafana/grafana-oss

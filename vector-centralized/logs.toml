@@ -1,7 +1,11 @@
 [sources.logs]
-type = "socket"
-mode = "unix"
-path = "/logs/vector"
+type = "http_client"
+endpoint = "http://[2001:470:1:c76:5000:84ff:fe36:c452]:19531/entries"
+method = "GET"
+scrape_interval_secs = 1
+    [sources.logs.headers]
+    Accept = ["application/json"]
+    Range = ["entries:0:1"]
 
 [transforms.filter]
 type = "filter"
@@ -26,23 +30,22 @@ if is_string(parsed_message){
 }
 """
 
-# Debug purposes
-# [sinks.out]
-# type = "console"
-# inputs = ["to_json"]
-# target = "stdout"
-#     [sinks.out.encoding]
-#     codec = "text"
-
-[sinks.out_logs]
-type = "loki"
+[sinks.out]
+type = "console"
 inputs = ["to_json"]
-endpoint = "http://loki:3100"
-compression = "none"
-    [sinks.out_logs.labels]
-    ic_node = "{{ node_id }}"
-    ic_subnet = "{{ subnet_id }}"
-    dc = "{{ dc_id }}"
-    ic_operator = "{{ operator_id }}"
-    [sinks.out_logs.encoding]
-    codec = "json"
+target = "stdout"
+    [sinks.out.encoding]
+    codec = "text"
+
+# [sinks.out_logs]
+# type = "loki"
+# inputs = ["to_json"]
+# endpoint = "http://localhost:3100"
+# compression = "none"
+#     [sinks.out_logs.labels]
+#     ic_node = "{{ node_id }}"
+#     ic_subnet = "{{ subnet_id }}"
+#     dc = "{{ dc_id }}"
+#     ic_operator = "{{ operator_id }}"
+#     [sinks.out_logs.encoding]
+#     codec = "json"
